@@ -6,8 +6,8 @@ export class Money {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  amount: number;
+  moneyAmount: number;
   // Relations
   @ManyToOne(() => Wallet, (wallet) => wallet.money)
-  wallet: Wallet[];
+  wallet: Wallet;
 }
