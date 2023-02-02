@@ -4,19 +4,13 @@ import {
   Body,
   Get,
   Param,
-  Patch,
-  Query,
-  Delete,
   NotFoundException,
-  Session,
-  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
-import { User } from './user.entity';
 
 @Controller('auth')
 @Serialize(UserDto)
