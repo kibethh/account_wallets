@@ -9,7 +9,7 @@ import { Money } from './money.entity';
 export class MoneyService {
   constructor(@InjectRepository(Money) private moneyRepo: Repository<Money>) {}
   create(amount: number, wallet: Wallet) {
-    const money = this.moneyRepo.create({ moneyAmount: amount });
+    const money = this.moneyRepo.create({ amount });
     money.wallet = wallet;
     return this.moneyRepo.save(money);
   }

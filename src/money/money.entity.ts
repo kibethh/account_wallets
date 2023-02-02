@@ -6,7 +6,7 @@ export class Money {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  moneyAmount: number;
+  amount: number;
   // Relations
   @ManyToOne(() => Wallet, (wallet) => wallet.money)
   wallet: Wallet;

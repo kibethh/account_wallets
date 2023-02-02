@@ -13,30 +13,31 @@ export class UsersService {
     return this.repo.save(user);
   }
   async findOne(id: number) {
-    if (!id) {
-      return null;
-    }
-
     let user = await this.repo
       .createQueryBuilder('user')
       .where('user.id= :id', { id })
-      .select('')
+      .select('*')
       .addSelect((subQuery) => {
         return subQuery
           .select('*')
           .addSelect((subQuery) => {
             return subQuery
-              .select('*')
+              .select('SUM(amount)', 'WalletBalance')
               .from(Money, 'money')
               .where('money.walletId= wallet.id FOR JSON AUTO');
           }, 'userMoney')
           .from(Wallet, 'wallet')
           .where('wallet.userId= user.id FOR JSON AUTO');
-      }, 'userWallets')
+      }, 'wallets')
       .getRawOne();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-    if (user.userWallets) {
-      user.userWallets = JSON.parse(user.userWallets);
+    console.log('user', user);
+
+    if (user && user.wallets) {
+      user.wallets = JSON.parse(user.wallets);
     }
     return user;
   }
@@ -46,7 +47,7 @@ export class UsersService {
   async find() {
     let users = await this.repo
       .createQueryBuilder('user')
-      .select('')
+      .select('id as id,email as email')
       .addSelect((subQuery) => {
         return subQuery
           .select('*')

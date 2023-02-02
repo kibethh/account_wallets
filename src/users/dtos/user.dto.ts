@@ -3,11 +3,11 @@ import { Wallet } from 'src/wallets/wallet.entity';
 
 export class UserDto {
   @Expose()
-  user_id: number;
+  id: number;
   @Expose()
-  user_email: string;
+  email: string;
   @Exclude()
-  user_password: string;
+  password: string;
   @Expose()
-  userWallets: Wallet[];
+  wallets: Wallet[];
 }

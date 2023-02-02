@@ -9,6 +9,7 @@ export class User {
   email: string;
   @Column()
   password: string;
+
   // Relations
   @OneToMany(() => Wallet, (wallet) => wallet.user)
   wallets: Wallet[];
