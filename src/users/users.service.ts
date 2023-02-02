@@ -34,11 +34,10 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    console.log('user', user);
-
     if (user && user.wallets) {
       user.wallets = JSON.parse(user.wallets);
     }
+   
     return user;
   }
   findByEmail(email: string) {

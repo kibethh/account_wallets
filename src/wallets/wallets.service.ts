@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Wallet } from './wallet.entity';
 import { User } from 'src/users/user.entity';
+import { Money } from 'src/money/money.entity';
 
 @Injectable()
 export class WalletsService {
@@ -15,14 +16,46 @@ export class WalletsService {
     wallet.user = user;
     return this.walletRepo.save(wallet);
   }
-  findOne(id: number) {
-    if (!id) {
-      return null;
+  async findOne(id: number) {
+    let wallet = await this.walletRepo
+      .createQueryBuilder('wallet')
+      .where('wallet.id= :id', { id })
+      .select('*')
+      .addSelect((subQuery) => {
+        return subQuery
+          .select('SUM(amount)', 'WalletBalance')
+          .from(Money, 'money')
+          .where('money.walletId= wallet.id FOR JSON AUTO');
+      }, 'userMoney')
+      .getRawOne();
+
+    if (!wallet) {
+      throw new NotFoundException('User not found');
     }
-    return this.walletRepo.findOneBy({ id });
+    if (wallet && wallet.userMoney) {
+      wallet.userMoney = JSON.parse(wallet.userMoney);
+    }
+
+    return wallet;
   }
-  findByUser(user: User) {
-    return this.walletRepo.find({ where: { user } });
+  async findByUser(userId: number) {
+    let wallets = await this.walletRepo
+      .createQueryBuilder('wallet')
+      .where('wallet.id= :id', { id: userId })
+      .select('*')
+      .addSelect((subQuery) => {
+        return subQuery
+          .select('SUM(amount)', 'WalletBalance')
+          .from(Money, 'money')
+          .where('money.walletId= wallet.id FOR JSON AUTO');
+      }, 'userMoney')
+      .getRawMany();
+    wallets.forEach((wallet) => {
+      if (wallet && wallet.userMoney) {
+        wallet.userMoney = JSON.parse(wallet.userMoney);
+      }
+    });
+    return wallets;
   }
   find() {
     return this.walletRepo.find();

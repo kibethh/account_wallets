@@ -43,7 +43,7 @@ export class WalletsController {
     if (!user) {
       throw new NotFoundException(`User with id: '${userId}' not found`);
     }
-    const userWallets = await this.walletsService.findByUser(user);
+    const userWallets = await this.walletsService.findByUser(userId);
 
     return userWallets;
   }
