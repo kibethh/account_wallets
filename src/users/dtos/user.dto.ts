@@ -1,8 +1,13 @@
-import { Expose } from 'class-transformer';
+import { Expose, Exclude } from 'class-transformer';
+import { Wallet } from 'src/wallets/wallet.entity';
 
 export class UserDto {
   @Expose()
-  id: number;
+  user_id: number;
   @Expose()
-  email: string;
+  user_email: string;
+  @Exclude()
+  user_password: string;
+  @Expose()
+  userWallets: Wallet[];
 }

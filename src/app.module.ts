@@ -24,7 +24,7 @@ import { Money } from './money/money.entity';
       // dropSchema: true,
       entities: [User, Wallet, Money],
       logger: 'advanced-console' as const,
-      logging: false,
+      logging: true,
       synchronize: true,
       extra: {
         options: {
